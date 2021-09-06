@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import dash
 from dash import dcc
 from dash import html
@@ -13,12 +14,19 @@ from pages import (
     two,
 )
 
+URL_PATH_SEP = '/'
+HOST = os.getenv('REPORT_HOST', 'localhost')
+PORT = os.getenv('REPORT_PORT', '8765')
+URL_BASE_PATHNAME = os.getenv('REPORT_URL_BASE', URL_PATH_SEP)
+if URL_BASE_PATHNAME[-1] != URL_PATH_SEP:
+    URL_BASE_PATHNAME += URL_PATH_SEP
+
 app = dash.Dash(
     __name__,
-    requests_pathname_prefix="/aspect/",
+    url_base_pathname=URL_BASE_PATHNAME,
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
 )
-app.title = "Financial Report"
+app.title = "Some Report"
 server = app.server
 
 # Describe the layout/ UI of the app
@@ -30,11 +38,11 @@ app.layout = html.Div(
 # Update page
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def display_page(pathname):
-    if pathname == "/wun":
+    if pathname == f'{URL_BASE_PATHNAME}wun':
         return wun.create_layout(app)
-    elif pathname == "/two":
+    elif pathname == f'{URL_BASE_PATHNAME}two':
         return two.create_layout(app)
-    elif pathname == "/full-view":
+    elif pathname == f'{URL_BASE_PATHNAME}full-view':
         return (
             overview.create_layout(app),
             wun.create_layout(app),
@@ -46,7 +54,7 @@ def display_page(pathname):
 
 if __name__ == "__main__":
     server = FastAPI()
-    server.mount("/aspect/", WSGIMiddleware(app.server))
-    uvicorn.run(server, port=8765, headers=[("server", "htsrv/3.1415")])
+    server.mount(URL_PATH_SEP, WSGIMiddleware(app.server))
+    uvicorn.run(server, host=HOST, port=PORT, headers=[("server", "server/1")])
 
     # app.run_server(debug=False, port=8765)
