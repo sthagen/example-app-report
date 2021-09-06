@@ -14,6 +14,7 @@ from pages import (
     two,
 )
 
+SERVER = os.getenv('REPORT_SERVER', 'server/1')
 URL_PATH_SEP = '/'
 HOST = os.getenv('REPORT_HOST', 'localhost')
 PORT = os.getenv('REPORT_PORT', '8765')
@@ -55,6 +56,6 @@ def display_page(pathname):
 if __name__ == "__main__":
     server = FastAPI()
     server.mount(URL_PATH_SEP, WSGIMiddleware(app.server))
-    uvicorn.run(server, host=HOST, port=PORT, headers=[("server", "server/1")])
+    uvicorn.run(server, host=HOST, port=PORT, headers=[("server", SERVER)])
 
     # app.run_server(debug=False, port=8765)
