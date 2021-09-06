@@ -17,7 +17,7 @@ from pages import (
 SERVER = os.getenv('REPORT_SERVER', 'server/1')
 URL_PATH_SEP = '/'
 HOST = os.getenv('REPORT_HOST', 'localhost')
-PORT = os.getenv('REPORT_PORT', '8765')
+PORT = int(os.getenv('REPORT_PORT', 8765))
 URL_BASE_PATHNAME = os.getenv('REPORT_URL_BASE', URL_PATH_SEP)
 if URL_BASE_PATHNAME[-1] != URL_PATH_SEP:
     URL_BASE_PATHNAME += URL_PATH_SEP
