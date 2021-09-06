@@ -1,5 +1,10 @@
 from dash import dcc, html
 
+URL_PATH_SEP = '/'
+URL_BASE_PATHNAME = os.getenv('REPORT_URL_BASE', URL_PATH_SEP)
+if URL_BASE_PATHNAME[-1] != URL_PATH_SEP:
+    URL_BASE_PATHNAME += URL_PATH_SEP
+
 
 def Header(app):
     return html.Div([get_header(app), html.Br([]), get_menu()])
@@ -42,7 +47,7 @@ def get_header(app):
                         [
                             dcc.Link(
                                 "Full View",
-                                href="/full-view",
+                                href=f"{URL_BASE_PATHNAME}full-view",
                                 className="full-view-link",
                             )
                         ],
@@ -63,17 +68,17 @@ def get_menu():
         [
             dcc.Link(
                 "Overview",
-                href="/overview",
+                href=f"{URL_BASE_PATHNAME}overview",
                 className="tab first",
             ),
             dcc.Link(
                 "Details Wun",
-                href="/wun",
+                href=f"{URL_BASE_PATHNAME}wun",
                 className="tab",
             ),
             dcc.Link(
                 "Details Two",
-                href="/two",
+                href=f"{URL_BASE_PATHNAME}two",
                 className="tab",
             ),
         ],
